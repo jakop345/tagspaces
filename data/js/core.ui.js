@@ -14,7 +14,6 @@ define(function(require, exports) {
   require('datetimepicker');
   require('moment');
 
-  var tsGettingStarted;
   var fileContent;
   var fileType;
   var waitingDialogTimeoutID;
@@ -41,7 +40,7 @@ define(function(require, exports) {
     if (isNode || isElectron) {
       $('#viewContainers').on('dragenter', function(event) {
         event.preventDefault();
-        showFileDropArea();
+        //showFileDropArea();
       });
       $('#viewContainers').on('drop', function(event) {
         //event.preventDefault();
@@ -73,7 +72,6 @@ define(function(require, exports) {
         }
         if (TSCORE.FileOpener.getOpenedFilePath() !== undefined) {
           TSCORE.FileOpener.openFile(TSCORE.PerspectiveManager.getPrevFile(TSCORE.FileOpener.getOpenedFilePath()));
-          TSCORE.PerspectiveManager.selectFile(TSCORE.FileOpener.getOpenedFilePath());
         }
         return false;
       });
@@ -84,7 +82,6 @@ define(function(require, exports) {
         }
         if (TSCORE.FileOpener.getOpenedFilePath() !== undefined) {
           TSCORE.FileOpener.openFile(TSCORE.PerspectiveManager.getNextFile(TSCORE.FileOpener.getOpenedFilePath()));
-          TSCORE.PerspectiveManager.selectFile(TSCORE.FileOpener.getOpenedFilePath());
         }
         return false;
       });
@@ -444,8 +441,12 @@ define(function(require, exports) {
 
   function showWaitingDialog(message, title) {
     openWaitingDialog = true;
-    title = title || $.i18n.t('ns.dialogs:titleWaiting');
-    message = message || 'No Message to Display.';
+    if (!title) {
+      title = $.i18n.t('ns.dialogs:titleWaiting');
+    }
+    if (!message) {
+      message = 'No Message to Display.';
+    }
     var waitingModal = $('#waitingDialog');
     waitingModal.find('#waitingHeader').text(title);
     waitingModal.find('#waitingMessage').text(message);
@@ -494,9 +495,13 @@ define(function(require, exports) {
   }
 
   function showAlertDialog(message, title) {
-    title = title || $.i18n.t('ns.dialogs:titleAlert');
-    message = message || 'No Message to Display.';
     console.warn(message + ' - ' + title);
+    if (!title) {
+      title = $.i18n.t('ns.dialogs:titleAlert');
+    }
+    if (!message) {
+      message = 'No Message to Display.';
+    }
     var n = noty({
       text: "<strong>" + title + "</strong><br>" + message,
       layout: 'bottomCenter',
@@ -515,8 +520,12 @@ define(function(require, exports) {
   }
 
   function showConfirmDialog(title, message, okCallback, cancelCallback, confirmShowNextTime) {
-    title = title || $.i18n.t('ns.dialogs:titleConfirm');
-    message = message || 'No Message to Display.';
+    if (!title) {
+      title = $.i18n.t('ns.dialogs:titleConfirm');
+    }
+    if (!message) {
+      message = 'No Message to Display.';
+    }
     var confirmModal = $('#confirmDialog');
     if (confirmShowNextTime) {
       confirmModal.find('#showThisDialogAgain').prop('checked', true);
@@ -847,14 +856,8 @@ define(function(require, exports) {
   }
 
   function startGettingStartedTour() {
-    tsGettingStarted = require('tsgettingstarted');
+    var tsGettingStarted = require('tsgettingstarted');
     tsGettingStarted.startTour();
-  }
-
-  function stopGettingStartedTour() {
-    if(tsGettingStarted) {
-      tsGettingStarted.stopTour();
-    }
   }
 
   function showMoveCopyFilesDialog() {
@@ -1037,7 +1040,7 @@ define(function(require, exports) {
       $('#tagMenuMoveTagRight').parent().hide();
       $('#tagMenuRemoveTag').parent().hide();
       $('#openDirectory').parent().hide();
-      // File opener
+      // File opener menu
       $('#tagFile').parent().hide();
       $('#renameFile').parent().hide();
       $('#duplicateFile').parent().hide();
@@ -1045,9 +1048,6 @@ define(function(require, exports) {
       $('#deleteFile').parent().hide();
       $('#openNatively').parent().hide();
       $('#addTagFileViewer').hide();
-      $('#toggleFileProperitesButton').hide();
-      $('#editFileDescriptionButton').remove();
-      $('#addTagsFileDescriptionButton').hide();
     } else if (isWeb) {
       $('#directoryMenuOpenDirectory').parent().hide();
       $('#fileMenuOpenDirectory').parent().hide();
@@ -1230,7 +1230,6 @@ define(function(require, exports) {
   exports.showWelcomeDialog = showWelcomeDialog;
   exports.showKeysDialog = showKeysDialog;
   exports.startGettingStartedTour = startGettingStartedTour;
-  exports.stopGettingStartedTour = stopGettingStartedTour;
   exports.showTagEditDialog = showTagEditDialog;
   //exports.showDateTimeCalendar = showDateTimeCalendar;
   exports.showOptionsDialog = showOptionsDialog;
